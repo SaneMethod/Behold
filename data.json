@@ -1,0 +1,458 @@
+{
+    "project": {
+        "name": "Behold",
+        "description": "JS Views for when you want Views, but don't need Backbone's weight, Angular's opinions, or excessive dependencies.",
+        "version": "0.1.0",
+        "url": "https://github.com/SaneMethod/Behold"
+    },
+    "files": {
+        "Behold.js": {
+            "name": "Behold.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {},
+    "classitems": [
+        {
+            "file": "Behold.js",
+            "line": 1,
+            "description": "Copyright Christopher Keefer, 2014.",
+            "author": "Christopher Keefer [SaneMethod]",
+            "version": "0.1.0\n\nRecreate js Views in a manner portable to projects that aren't using libraries with the concept built-in.",
+            "params": [
+                {
+                    "name": "root",
+                    "description": "Where to attach the Behold object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "$",
+                    "description": "jQuery lib, or api-compatible replacement (such as Zepto).",
+                    "type": "Object"
+                },
+                {
+                    "name": "_",
+                    "description": "underscore lib.",
+                    "type": "Object="
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 12,
+            "description": "If the underscore library isn't passed to us, we'll patch in our own native-reliant functions for the\nunderscore functionality we want/need.",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 37,
+            "description": "Test to see whether the passed object should indeed be considered an object,\nparticularly for the purposes of extend.",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "",
+                    "type": "*"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 48,
+            "description": "Copy all properties on an unspecified number of source objects into the destination object,\nwith properties appearing on later source objects overriding identically named properties in\nthe destination or earlier source objects.",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "Destination object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 70,
+            "description": "Return a uniqueId using an internal counter and, if passed, a prefix string.",
+            "params": [
+                {
+                    "name": "prefix",
+                    "description": "",
+                    "type": "String|number="
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 78,
+            "description": "Escape html special characters in a string.",
+            "params": [
+                {
+                    "name": "str",
+                    "description": ""
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 87,
+            "description": "Based on the same defaults as standard underscore.",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 94,
+            "description": "Not a full-featured replacement for underscore templates - this only allows us to escape\nor interpolate named values into the template string - no evaluation.",
+            "params": [
+                {
+                    "name": "text",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "settings",
+                    "description": "",
+                    "type": "Object="
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 125,
+            "description": "Our view function.",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object="
+                }
+            ],
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 143,
+            "description": "Set options on this object from the options object passed to th constructor based on the key names\nin viewProps.",
+            "access": "private",
+            "tagname": "",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 162,
+            "description": "If this.el is defined, run it through jQuery and set it as a reference to the element for this view.\nOtherwise, create a new element based on the id, attributes, tagName and className properties.",
+            "access": "private",
+            "tagname": "",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 185,
+            "description": "Get the full selector for a given key in the ui.",
+            "params": [
+                {
+                    "name": "ui",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 205,
+            "description": "Bind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that\npreviously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.",
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 225,
+            "description": "Unbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.",
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 245,
+            "description": "Assign events based on this.events(if set) to map either this.ui element references (prefaced by\n\"@ui.\"), or else a bare css locator string. Namespace all events with '.dgbehold' plus the cid of this view.",
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 277,
+            "description": "Detach events attached by calling attachEvents.",
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 302,
+            "description": "Remove the referenced element from the DOM.",
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 312,
+            "description": "Set a new element as the referenced element for this view.",
+            "params": [
+                {
+                    "name": "element",
+                    "description": "",
+                    "type": "String|HTMLElement|jQuery"
+                },
+                {
+                    "name": "skipEvents",
+                    "description": "",
+                    "type": "Boolean="
+                },
+                {
+                    "name": "skipUnbinding",
+                    "description": "",
+                    "type": "Boolean="
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Behold"
+            },
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 338,
+            "description": "An empty function by default, to be overridden by extending classes.",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 343,
+            "description": "Recreate javascript inheritance (working similarly to backbone extend) to allow our views to be\nextendable/inheritable.",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 368,
+            "description": "Application container for behold views.",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 376,
+            "description": "Call the initialize function on all registered modules when start is called.",
+            "class": ""
+        },
+        {
+            "file": "Behold.js",
+            "line": 391,
+            "description": "Register a module, instantiating it and passing it the arguments specified.\nAlternatively, if the initializer isn't provided, expect that we want a reference to the module\npassed back to us. Will return undefined if module hasn't previously been registered.",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "initializer",
+                    "description": "",
+                    "type": "Function="
+                },
+                {
+                    "name": "arguments",
+                    "description": "to be passed to the initializer",
+                    "type": "..."
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "*"
+            },
+            "class": ""
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: version",
+            "line": " Behold.js:1"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:37"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:48"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:70"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:205"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:225"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:245"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:277"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:302"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:312"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " Behold.js:391"
+        },
+        {
+            "message": "Missing item type\nCopyright Christopher Keefer, 2014.",
+            "line": " Behold.js:1"
+        },
+        {
+            "message": "Missing item type\nIf the underscore library isn't passed to us, we'll patch in our own native-reliant functions for the\nunderscore functionality we want/need.",
+            "line": " Behold.js:12"
+        },
+        {
+            "message": "Missing item type\nTest to see whether the passed object should indeed be considered an object,\nparticularly for the purposes of extend.",
+            "line": " Behold.js:37"
+        },
+        {
+            "message": "Missing item type\nCopy all properties on an unspecified number of source objects into the destination object,\nwith properties appearing on later source objects overriding identically named properties in\nthe destination or earlier source objects.",
+            "line": " Behold.js:48"
+        },
+        {
+            "message": "Missing item type\nReturn a uniqueId using an internal counter and, if passed, a prefix string.",
+            "line": " Behold.js:70"
+        },
+        {
+            "message": "Missing item type\nEscape html special characters in a string.",
+            "line": " Behold.js:78"
+        },
+        {
+            "message": "Missing item type\nBased on the same defaults as standard underscore.",
+            "line": " Behold.js:87"
+        },
+        {
+            "message": "Missing item type\nNot a full-featured replacement for underscore templates - this only allows us to escape\nor interpolate named values into the template string - no evaluation.",
+            "line": " Behold.js:94"
+        },
+        {
+            "message": "Missing item type\nOur view function.",
+            "line": " Behold.js:125"
+        },
+        {
+            "message": "Missing item type\nSet options on this object from the options object passed to th constructor based on the key names\nin viewProps.",
+            "line": " Behold.js:143"
+        },
+        {
+            "message": "Missing item type\nIf this.el is defined, run it through jQuery and set it as a reference to the element for this view.\nOtherwise, create a new element based on the id, attributes, tagName and className properties.",
+            "line": " Behold.js:162"
+        },
+        {
+            "message": "Missing item type\nGet the full selector for a given key in the ui.",
+            "line": " Behold.js:185"
+        },
+        {
+            "message": "Missing item type\nBind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that\npreviously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.",
+            "line": " Behold.js:205"
+        },
+        {
+            "message": "Missing item type\nUnbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.",
+            "line": " Behold.js:225"
+        },
+        {
+            "message": "Missing item type\nAssign events based on this.events(if set) to map either this.ui element references (prefaced by\n\"@ui.\"), or else a bare css locator string. Namespace all events with '.dgbehold' plus the cid of this view.",
+            "line": " Behold.js:245"
+        },
+        {
+            "message": "Missing item type\nDetach events attached by calling attachEvents.",
+            "line": " Behold.js:277"
+        },
+        {
+            "message": "Missing item type\nRemove the referenced element from the DOM.",
+            "line": " Behold.js:302"
+        },
+        {
+            "message": "Missing item type\nSet a new element as the referenced element for this view.",
+            "line": " Behold.js:312"
+        },
+        {
+            "message": "Missing item type\nAn empty function by default, to be overridden by extending classes.",
+            "line": " Behold.js:338"
+        },
+        {
+            "message": "Missing item type\nRecreate javascript inheritance (working similarly to backbone extend) to allow our views to be\nextendable/inheritable.",
+            "line": " Behold.js:343"
+        },
+        {
+            "message": "Missing item type\nApplication container for behold views.",
+            "line": " Behold.js:368"
+        },
+        {
+            "message": "Missing item type\nCall the initialize function on all registered modules when start is called.",
+            "line": " Behold.js:376"
+        },
+        {
+            "message": "Missing item type\nRegister a module, instantiating it and passing it the arguments specified.\nAlternatively, if the initializer isn't provided, expect that we want a reference to the module\npassed back to us. Will return undefined if module hasn't previously been registered.",
+            "line": " Behold.js:391"
+        }
+    ]
+}
