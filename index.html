@@ -83,7 +83,7 @@
           <section id="Main"><h1>Behold</h1>
 <h6>JS Views for when you want Views, but don&#39;t need Backbone&#39;s weight, Angular&#39;s opinions, or excessive dependencies.</h6>
 <p>Behold is for those who like the tidy encapsulation that frameworks like <a href="https://github.com/chaplinjs/chaplin">Chaplin</a><br />and <a href="http://marionettejs.com/">Marionette</a> provide for js views, but you don&#39;t need everything that Backbone offers,<br />and can&#39;t justify the extra weight of it.</p><h2>Contents</h2>
-<p><a href="#why-views">Why Views</a></p><p><a href="#why-behold">Why Behold</a></p><p><a href="#dependencies">Dependencies</a></p><p><a href="#modules">Modules</a></p><p><a href="#views">Views</a></p><h2>Why Views</h2>
+<p><a href="#why-views">Why Views</a></p><p><a href="#why-behold">Why Behold</a></p><p><a href="#dependencies">Dependencies</a></p><p><a href="#usage-example">Usage Example</a></p><p><a href="#more-details">More Details</a></p><h2>Why Views</h2>
 <p>What are js views? In a nutshell, the intent of a js view is to provide a neat encapsulation for all the ui binding,<br />event handling and functionality associated with a given page, or set of pages. Novice javascript often involves<br />terrible spaghetti code, spread throuhgout <code>onevent</code> handlers in the html, bunches of <code>script</code> tags littered<br />randomly through the markup, and an ugly mess of global variables and functions sitting in a single master file.</p><p>With Views enabled by a library like Behold, you instead have nicely encapsulated modules that don&#39;t leak private<br />variables or declare any new global variables (unless you really want to, or forget to prepend <code>var</code> to your<br />variable declaration, since no framework can save you from sloppy coding).</p><p>With Views, all of your ui binding is scoped to a root element, keeping selectors performant; all of your ui binding can<br />be declared in a single object, keeping the bindings easy to find and use throughout the code, reducing wasteful<br />rebinding across functions; all of your event binding can take advantage of existing ui binding, is also declared<br />in a single, easy to find object, and keeps its functions enclosed within the view, eliminating the chance of<br />overriding like named functions by declaring them globally, or conflicting with other libraries you&#39;ve added.</p><p>In other words, Views can be the answer to keeping your site&#39;s javascript tidy and maintainable, whether you have a<br />few pages that just need some animation added, a js-based browser plugin, or a complex webapp.</p><h2>Why Behold</h2>
 <p>If you need:</p><ul>
 <li>routing,</li>
@@ -98,9 +98,68 @@
 <li>and similar helpful functionality (see below for more details)</li>
 </ul>
 <p>then Behold is for you.</p><h2>Dependencies</h2>
-<p><a href="https://jquery.com">jQuery</a>, or API-compatible replacement library, such as <a href="http://zeptojs.com/">Zepto</a>.</p><p><a href="http://underscorejs.org/">Underscore</a> - Optional - if not supplied, Behold includes a stripped down, native-reliant<br />re-implementation of some of underscore&#39;s functionality. See below for more details.</p><h2>Modules</h2>
-<h2>Views</h2>
-</section>
+<p><a href="https://jquery.com">jQuery</a>, or API-compatible replacement library, such as <a href="http://zeptojs.com/">Zepto</a>.</p><p><a href="http://underscorejs.org/">Underscore</a> - Optional - if not supplied, Behold includes a stripped down, native-reliant<br />re-implementation of some of underscore&#39;s functionality. See below for more details.</p><h2>Usage Example</h2>
+<p>In your javascript entry point of execution:</p><pre><code class="lang-javascript">var gApp = new Behold.Application();
+
+$(document).ready(function(){
+    gApp.start(); // Initializes all registered modules
+});
+</code></pre>
+<p>Then, in any other javascript file included in the page (you can include it before or after your entry point, so long<br />as it will be loaded before whatever criteria you&#39;ve selected for executing <code>start()</code> on your application object):</p><pre><code class="lang-javascript">/**
+ * Module constructor functions are passed four arguments by default.
+ * self = A reference to the module.
+ * app = A reference to the application object that the module has been registered on.
+ * $ = A reference to the jQuery library.
+ * _ = A reference to the underscore library, or our fill in if underscore is not present and passed in.
+ * Additional parameters can be fed into the constructor function by adding them, comma seperated, after the
+ * constructor function (see below).
+ */
+gApp.module(&#39;moduleName&#39;, function(self, app, $, _){
+    // Variables declared with var are private to this closure.
+    // Convention is to preface the variable name with an underscore to visually indicate this.
+    var _Header = Behold.extend({ // _Header is now a constructor for a new Behold View.
+            el:&#39;#header&#39;, // Root element
+            ui:{ // ui bindings
+                // the key &#39;fbLogin&#39; will automatically be bound to the element with the id #fbHeaderLogin, found
+                // somewhere beneath the root element #header
+                // Any valid jQuery selector can be used
+                fbLogin:&#39;#fbHeaderLogin&#39;,
+                gpLogin:&#39;#gpHeaderLogin&#39;
+            },
+            events:{ // event bindings
+                // A click event will automatically be bound to the element with the key &#39;fbLogin&#39; within the ui
+                // object, as seen above. When this event fires, the &#39;onClick&#39; handler within this view will be triggered.
+                &#39;click @ui.fbLogin&#39;:&#39;onClick&#39;
+            },
+            /**
+             * The initialize function will be called when this view is instantatied, and is the perfect place to put
+             * code that should be run at that time, like bindings that can&#39;t live in the events object for whatever
+             * reason, or function calls to make first-run changes.
+             */
+            initialize:function(){},
+            /**
+             * This is the event handler that we bound to in the events object, above. Notice it takes one parameter,
+             * event, which is the jQuery Event, as per usual handler behaviour.
+             */
+            onClick:function(event){}
+        }),
+        _header; // We declare another local variable for the instantiated view.
+
+    /**
+     * Initialize this module. This function will be called automatically by Behold.Application.start().
+     * In this example, if we detect that the header element is present, we instantiate the Header view.
+     */
+    self.initialize = function(){
+        if ($(&#39;#header&#39;).length){
+            _header = new _Header({} /* We can pass in options in this object, that will be available via this.options in the view */);
+        }
+    };
+    // Here we could add a comma separated series of variables to pass into the module constructor function, after the
+    // functions closing curly bracket, should we wish to.
+});
+</code></pre>
+<h2>More Details</h2>
+<p>For a detailed view into the internals of Behold,<br /><a href="http://sanemethod.github.io/Behold/Behold.js.html">head to the doxx pages</a>.</p></section>
         </div>
       </div>
     </div>
