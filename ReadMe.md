@@ -7,10 +7,15 @@ and [Marionette](http://marionettejs.com/) provide for js views, but you don't n
 and can't justify the extra weight of it.
 
 [Why Views](#why-views)
+
 [Why Behold](#why-behold)
+
 [Dependencies](#dependencies)
+
 [Usage](#usage)
+
 [Modules](#modules)
+
 [Views](#views)
 
 ###Why Views
