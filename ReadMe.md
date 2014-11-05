@@ -15,9 +15,9 @@ Contents
 
 [Dependencies](#dependencies)
 
-[Modules](#modules)
+[Usage Example](#usage-example)
 
-[Views](#views)
+[More Details](#more-details)
 
 Why Views
 -----------
@@ -68,8 +68,76 @@ Dependencies
 [Underscore](http://underscorejs.org/) - Optional - if not supplied, Behold includes a stripped down, native-reliant
 re-implementation of some of underscore's functionality. See below for more details.
 
-Modules
--------
+Usage Example
+-------------
 
-Views
------
+In your javascript entry point of execution:
+```javascript
+var gApp = new Behold.Application();
+
+$(document).ready(function(){
+    gApp.start(); // Initializes all registered modules
+});
+```
+
+Then, in any other javascript file included in the page (you can include it before or after your entry point, so long
+as it will be loaded before whatever criteria you've selected for executing ```start()``` on your application object):
+```javascript
+/**
+ * Module constructor functions are passed four arguments by default.
+ * self = A reference to the module.
+ * app = A reference to the application object that the module has been registered on.
+ * $ = A reference to the jQuery library.
+ * _ = A reference to the underscore library, or our fill in if underscore is not present and passed in.
+ * Additional parameters can be fed into the constructor function by adding them, comma seperated, after the
+ * constructor function (see below).
+ */
+gApp.module('moduleName', function(self, app, $, _){
+    // Variables declared with var are private to this closure.
+    // Convention is to preface the variable name with an underscore to visually indicate this.
+    var _Header = Behold.extend({ // _Header is now a constructor for a new Behold View.
+            el:'#header', // Root element
+            ui:{ // ui bindings
+                // the key 'fbLogin' will automatically be bound to the element with the id #fbHeaderLogin, found
+                // somewhere beneath the root element #header
+                // Any valid jQuery selector can be used
+                fbLogin:'#fbHeaderLogin',
+                gpLogin:'#gpHeaderLogin'
+            },
+            events:{ // event bindings
+                // A click event will automatically be bound to the element with the key 'fbLogin' within the ui
+                // object, as seen above. When this event fires, the 'onClick' handler within this view will be triggered.
+                'click @ui.fbLogin':'onClick'
+            },
+            /**
+             * The initialize function will be called when this view is instantatied, and is the perfect place to put
+             * code that should be run at that time, like bindings that can't live in the events object for whatever
+             * reason, or function calls to make first-run changes.
+             */
+            initialize:function(){},
+            /**
+             * This is the event handler that we bound to in the events object, above. Notice it takes one parameter,
+             * event, which is the jQuery Event, as per usual handler behaviour.
+             */
+            onClick:function(event){}
+        }),
+        _header; // We declare another local variable for the instantiated view.
+
+    /**
+     * Initialize this module. This function will be called automatically by Behold.Application.start().
+     * In this example, if we detect that the header element is present, we instantiate the Header view.
+     */
+    self.initialize = function(){
+        if ($('#header').length){
+            _header = new _Header({} /* We can pass in options in this object, that will be available via this.options in the view */);
+        }
+    };
+    // Here we could add a comma separated series of variables to pass into the module constructor function, after the
+    // functions closing curly bracket, should we wish to.
+});
+```
+
+More Details
+------------
+For a detailed view into the internals of Behold,
+[head to the doxx pages](http://sanemethod.github.io/Behold/Behold.js.html).
