@@ -15,13 +15,12 @@ Contents
 
 [Dependencies](#dependencies)
 
-[Usage](#usage)
-
 [Modules](#modules)
 
 [Views](#views)
 
-###Why Views
+Why Views
+-----------
 What are js views? In a nutshell, the intent of a js view is to provide a neat encapsulation for all the ui binding,
 event handling and functionality associated with a given page, or set of pages. Novice javascript often involves
 terrible spaghetti code, spread throuhgout ```onevent``` handlers in the html, bunches of ```script``` tags littered
@@ -37,14 +36,16 @@ rebinding across functions; all of your event binding can take advantage of exis
 in a single, easy to find object, and keeps its functions enclosed within the view, eliminating the chance of
 overriding like named functions by declaring them globally, or conflicting with other libraries you've added.
 
-In other words, Views are the answer to keeping your sites javascript tidy and maintainable, whether you have a
+In other words, Views can be the answer to keeping your site's javascript tidy and maintainable, whether you have a
 few pages that just need some animation added, a js-based browser plugin, or a complex webapp.
 
-###Why Behold
+Why Behold
+----------
 If you need:
 * routing,
 * Collections,
 * client-side models of db tables,
+
 you should check out [Backbone](http://backbonejs.org/) and one of the many frameworks building on it,
 like the two mentioned above.
 
@@ -57,16 +58,17 @@ unbound as a unit, and are compatible with the jQuery style bindings your used t
 namespacing);
 * Clear organization and encapsulation of functions being bound to, or that operate on a given view;
 * and similar helpful functionality (see below for more details)
+
 then Behold is for you.
 
-###Dependencies
+Dependencies
+------------
 [jQuery](https://jquery.com), or API-compatible replacement library, such as [Zepto](http://zeptojs.com/).
 [Underscore](http://underscorejs.org/) - Optional - if not supplied, Behold includes a stripped down, native-reliant
 re-implementation of some of underscore's functionality. See below for more details.
 
-Usage
-------
+Modules
+-------
 
-###Modules
-
-###Views
+Views
+-----
