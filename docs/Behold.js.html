@@ -172,7 +172,7 @@
             <h1>isObject</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>isObject()</span>
+              <div class="label label-info radius ctx-type">method</div><span>isObject()</span> -><span>boolean</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -187,7 +187,7 @@
               <tr>
                 <td>obj</td>
                 <td>*</td>
-                <td></td>
+                <td>The parameter to test for 'objectness'.</td>
               </tr>
             </tbody>
           </table>
@@ -201,7 +201,7 @@
             <h1>extend</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>extend()</span>
+              <div class="label label-info radius ctx-type">method</div><span>extend()</span> -><span>object</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -240,7 +240,7 @@
             <h1>uniqueId</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>uniqueId()</span>
+              <div class="label label-info radius ctx-type">method</div><span>uniqueId()</span> -><span>string</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -280,9 +280,9 @@
             </thead>
             <tbody>
               <tr>
-                <td></td>
+                <td>String</td>
                 <td>str</td>
-                <td></td>
+                <td>to replace characters in.</td>
               </tr>
             </tbody>
           </table>
@@ -323,12 +323,12 @@
               <tr>
                 <td>text</td>
                 <td>string</td>
-                <td></td>
+                <td>The text to use as the template.</td>
               </tr>
               <tr>
                 <td>settings</td>
                 <td>object=</td>
-                <td></td>
+                <td>Options to override the standard templateSettings.</td>
               </tr>
             </tbody>
           </table>
@@ -375,7 +375,7 @@
               <tr>
                 <td>options</td>
                 <td>object=</td>
-                <td></td>
+                <td>Options to be passed to the view. Those with certain names will be set directly on the object for easy access - the others will live in this.options in the view.</td>
               </tr>
             </tbody>
           </table>
@@ -411,12 +411,12 @@
               <tr>
                 <td>ui</td>
                 <td>object</td>
-                <td></td>
+                <td>The ui object to look in.</td>
               </tr>
               <tr>
                 <td>key</td>
                 <td>string</td>
-                <td></td>
+                <td>The key to search for in the object.</td>
               </tr>
             </tbody>
           </table>
@@ -438,7 +438,7 @@
             <h1>bindUI</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.bindUI()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.bindUI()</span> -><span>Behold</span>
             </p>
           </section>
           <div class="description"><p>Bind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that<br />previously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.</p> </div>
@@ -460,7 +460,7 @@
             <h1>unBindUI</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.unBindUI()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.unBindUI()</span> -><span>Behold</span>
             </p>
           </section>
           <div class="description"><p>Unbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.</p> </div>
@@ -483,7 +483,7 @@
             <h1>attachEvents</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.attachEvents()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.attachEvents()</span> -><span>Behold</span>
             </p>
           </section>
           <div class="description"><p>Assign events based on this.events(if set) to map either this.ui element references (prefaced by<br />&quot;@ui.&quot;), or else a bare css locator string. Namespace all events with &#39;.dgbehold&#39; plus the cid of this view.</p> </div>
@@ -517,7 +517,7 @@
             <h1>detachEvents</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.detachEvents()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.detachEvents()</span> -><span>Behold</span>
             </p>
           </section>
           <div class="description"><p>Detach events attached by calling attachEvents.</p> </div>
@@ -545,7 +545,7 @@
             <h1>remove</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.remove()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.remove()</span> -><span>Behold</span>
             </p>
           </section>
           <div class="description"><p>Remove the referenced element from the DOM.</p> </div>
@@ -558,7 +558,7 @@
             <h1>setElement</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.setElement()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.setElement()</span> -><span>Behold</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -573,17 +573,17 @@
               <tr>
                 <td>element</td>
                 <td>string,HTMLElement,jQuery</td>
-                <td></td>
+                <td>The element to set as the root of this view.</td>
               </tr>
               <tr>
                 <td>skipEvents</td>
                 <td>boolean=</td>
-                <td></td>
+                <td>Whether to skip binding events.</td>
               </tr>
               <tr>
                 <td>skipUnbinding</td>
                 <td>boolean=</td>
-                <td></td>
+                <td>Whether to skip unbinding events before binding new events.</td>
               </tr>
             </tbody>
           </table>
@@ -677,7 +677,7 @@
             <h1>module</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.Application.prototype.module()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.Application.prototype.module()</span> -><span>*</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -692,17 +692,17 @@
               <tr>
                 <td>name</td>
                 <td>string</td>
-                <td></td>
+                <td>Name of the module.</td>
               </tr>
               <tr>
                 <td>initializer</td>
                 <td>function=</td>
-                <td></td>
+                <td>An constructor function.</td>
               </tr>
               <tr>
                 <td>arguments</td>
                 <td>...</td>
-                <td>to be passed to the initializer</td>
+                <td>Additional arguments to be passed to the initializer</td>
               </tr>
             </tbody>
           </table>

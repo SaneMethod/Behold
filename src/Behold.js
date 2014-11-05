@@ -37,8 +37,8 @@
                 /**
                  * Test to see whether the passed object should indeed be considered an object,
                  * particularly for the purposes of extend.
-                 * @param {*} obj
-                 * @returns {boolean}
+                 * @param {*} obj The parameter to test for 'objectness'.
+                 * @return {boolean}
                  */
                 isObject: function (obj) {
                     var types = ['function', 'object'];
@@ -50,7 +50,7 @@
                  * with properties appearing on later source objects overriding identically named properties in
                  * the destination or earlier source objects.
                  * @param {object} obj Destination object.
-                 * @returns {object}
+                 * @return {object}
                  */
                 extend: function (obj) {
                     var src,
@@ -70,14 +70,14 @@
                 /**
                  * Return a uniqueId using an internal counter and, if passed, a prefix string.
                  * @param {string|number=} prefix
-                 * @returns {string}
+                 * @return {string}
                  */
                 uniqueId: function (prefix) {
                     return (prefix) ? prefix + (++idCounter+'') : (++idCounter+'');
                 },
                 /**
                  * Escape html special characters in a string.
-                 * @param str
+                 * @param str String to replace characters in.
                  */
                 escape:function(str){
                     return str.replace(escaper, function(match){
@@ -95,8 +95,8 @@
                  * Not a full-featured replacement for underscore templates - this only allows us to escape
                  * or interpolate named values into the template string - no evaluation.
                  *
-                 * @param {string} text
-                 * @param {object=} settings
+                 * @param {string} text The text to use as the template.
+                 * @param {object=} settings Options to override the standard templateSettings.
                  */
                 template:function(text, settings){
                     settings = this.extend({}, this.templateSettings, settings);
@@ -124,7 +124,8 @@
 
     /**
      * Our view function.
-     * @param {object=} options
+     * @param {object=} options Options to be passed to the view. Those with certain names will be set directly
+     * on the object for easy access - the others will live in this.options in the view.
      * @constructor
      */
     function Behold(options){
@@ -141,7 +142,7 @@
     }
 
     /**
-     * Set options on this object from the options object passed to th constructor based on the key names
+     * Set options on this object from the options object passed to the constructor based on the key names
      * in viewProps.
      * @private
      */
@@ -184,9 +185,9 @@
 
     /**
      * Get the full selector for a given key in the ui.
-     * @param {object} ui
-     * @param {string} key
-     * @return {string}
+     * @param {object} ui The ui object to look in.
+     * @param {string} key The key to search for in the object.
+     * @return {string} Returns the full selector string to be used to select the element in question.
      */
     Behold.prototype.getUISelector = function(ui, key){
         var el;
@@ -205,7 +206,7 @@
     /**
      * Bind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that
      * previously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.
-     * @returns {Behold}
+     * @return {Behold}
      */
     Behold.prototype.bindUI = function(){
         var ui = _.extend({}, this._uiBindings || this.ui),
@@ -224,7 +225,7 @@
 
     /**
      * Unbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.
-     * @returns {Behold}
+     * @return {Behold}
      */
     Behold.prototype.unBindUI = function(){
         var ui = this.ui,
@@ -245,7 +246,7 @@
     /**
      * Assign events based on this.events(if set) to map either this.ui element references (prefaced by
      * "@ui."), or else a bare css locator string. Namespace all events with '.dgbehold' plus the cid of this view.
-     * @returns {Behold}
+     * @return {Behold}
      */
     Behold.prototype.attachEvents = function(){
         var that = this,
@@ -276,7 +277,7 @@
 
     /**
      * Detach events attached by calling attachEvents.
-     * @returns {Behold}
+     * @return {Behold}
      */
     Behold.prototype.detachEvents = function(){
         var ui = this.ui,
@@ -301,7 +302,7 @@
 
     /**
      * Remove the referenced element from the DOM.
-     * @returns {Behold}
+     * @return {Behold}
      */
     Behold.prototype.remove = function(){
         this.detachEvents();
@@ -311,10 +312,10 @@
 
     /**
      * Set a new element as the referenced element for this view.
-     * @param {string|HTMLElement|jQuery} element
-     * @param {boolean=} skipEvents
-     * @param {boolean=} skipUnbinding
-     * @returns {Behold}
+     * @param {string|HTMLElement|jQuery} element The element to set as the root of this view.
+     * @param {boolean=} skipEvents Whether to skip binding events.
+     * @param {boolean=} skipUnbinding Whether to skip unbinding events before binding new events.
+     * @return {Behold}
      */
     Behold.prototype.setElement = function(element, skipEvents, skipUnbinding){
         if (this.$el && !skipUnbinding)
@@ -337,6 +338,7 @@
 
     /**
      * An empty function by default, to be overridden by extending classes.
+     * @abstract
      */
     Behold.prototype.initialize = function(){};
 
@@ -392,10 +394,10 @@
      * Register a module, instantiating it and passing it the arguments specified.
      * Alternatively, if the initializer isn't provided, expect that we want a reference to the module
      * passed back to us. Will return undefined if module hasn't previously been registered.
-     * @param {string} name
-     * @param {function=} initializer
-     * @param {...} arguments to be passed to the initializer
-     * @returns {*}
+     * @param {string} name Name of the module.
+     * @param {function=} initializer An constructor function.
+     * @param {...} arguments Additional arguments to be passed to the initializer
+     * @return {*}
      */
     Behold.Application.prototype.module = function(name, initializer){
         if (!initializer) return this.modules[name];
