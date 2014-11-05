@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Behold.js - Behold</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="Behold"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: Behold.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Copyright Christopher Keefer, 2014.
+ * @author Christopher Keefer [SaneMethod]
+ * @version 0.1.0
+ *
+ * Recreate js Views in a manner portable to projects that aren&#x27;t using libraries with the concept built-in.
+ * @param {object} root Where to attach the Behold object.
+ * @param {object} $ jQuery lib, or api-compatible replacement (such as Zepto).
+ * @param {object=} _ underscore lib.
+ */
+(function(root, $, _){
+    /**
+     * If the underscore library isn&#x27;t passed to us, we&#x27;ll patch in our own native-reliant functions for the
+     * underscore functionality we want/need.
+     */
+    _ = _ || (function(){
+        var idCounter = 0,
+            noMatch = /(.)^/,
+            escapes = {
+                &quot;&#x27;&quot;:&quot;&amp;#39;&quot;,
+                &#x27;&amp;&#x27;:&#x27;&amp;amp;&#x27;,
+                &#x27;&lt;&#x27;:&#x27;&amp;lt;&#x27;,
+                &#x27;&gt;&#x27;:&#x27;&amp;gt;&#x27;,
+                &#x27;&quot;&#x27;:&#x27;&amp;quot;&#x27;,
+                &#x27;\\&#x27;:&#x27;\\&#x27;,
+                &#x27;/&#x27;:&#x27;&amp;#x2F&#x27;,
+                &#x27;\r&#x27;:&#x27;r&#x27;,
+                &#x27;\n&#x27;:&#x27;&lt;br /&gt;&#x27;,
+                &#x27;\u2028&#x27;:&#x27;u2028&#x27;,
+                &#x27;\u2029&#x27;:&#x27;u2029&#x27;
+            },
+            escaper = new RegExp(Object.keys(escapes).join(&#x27;|&#x27;)+&#x27;/g&#x27;),
+            escapeChar = function(match) {
+                return &#x27;\\&#x27; + escapes[match];
+            },
+            _fill = {
+                /**
+                 * Test to see whether the passed object should indeed be considered an object,
+                 * particularly for the purposes of extend.
+                 * @param {*} obj
+                 * @returns {boolean}
+                 */
+                isObject: function (obj) {
+                    var types = [&#x27;function&#x27;, &#x27;object&#x27;];
+
+                    return (types.indexOf(typeof obj) !== -1 &amp;&amp; !!obj);
+                },
+                /**
+                 * Copy all properties on an unspecified number of source objects into the destination object,
+                 * with properties appearing on later source objects overriding identically named properties in
+                 * the destination or earlier source objects.
+                 * @param {object} obj Destination object.
+                 * @returns {object}
+                 */
+                extend: function (obj) {
+                    var src,
+                        keys;
+
+                    if (!this.isObject(obj)) return obj;
+                    for (var i = 1, len = arguments.length; i &lt; len; i++) {
+                        src = arguments[i];
+                        if (!this.isObject(src)) continue;
+                        keys = Object.keys(src);
+                        keys.forEach(function (prop) {
+                            obj[prop] = src[prop];
+                        });
+                    }
+                    return obj;
+                },
+                /**
+                 * Return a uniqueId using an internal counter and, if passed, a prefix string.
+                 * @param {string|number=} prefix
+                 * @returns {string}
+                 */
+                uniqueId: function (prefix) {
+                    return (prefix) ? prefix + (++idCounter+&#x27;&#x27;) : (++idCounter+&#x27;&#x27;);
+                },
+                /**
+                 * Escape html special characters in a string.
+                 * @param str
+                 */
+                escape:function(str){
+                    return str.replace(escaper, function(match){
+                        return escapes[match];
+                    });
+                },
+                /**
+                 * Based on the same defaults as standard underscore.
+                 */
+                templateSettings:{
+                    interpolate : /&lt;%=([\s\S]+?)%&gt;/g,
+                    escape      : /&lt;%-([\s\S]+?)%&gt;/g
+                },
+                /**
+                 * Not a full-featured replacement for underscore templates - this only allows us to escape
+                 * or interpolate named values into the template string - no evaluation.
+                 *
+                 * @param {string} text
+                 * @param {object=} settings
+                 */
+                template:function(text, settings){
+                    settings = this.extend({}, this.templateSettings, settings);
+                    var matcher = RegExp([
+                        (settings.escape || noMatch).source,
+                        (settings.interpolate || noMatch).source
+                    ].join(&#x27;|&#x27;), &#x27;g&#x27;),
+                        replacer = function(data, match, escape, interpolate, offset){
+                            if (escape) return _fill.escape(escape.trim());
+                            if (interpolate) return data[interpolate.trim()];
+                        },
+                        template;
+
+                    template = function(data){
+                        text = text.replace(matcher, replacer.bind(this, data));
+                        return text;
+                    };
+
+                    return template;
+                }
+            };
+
+        return _fill;
+    })();
+
+    /**
+     * Our view function.
+     * @param {object=} options
+     * @constructor
+     */
+    function Behold(options){
+        this.cid = _.uniqueId(&#x27;view&#x27;);
+        this.options = options || {};
+        this.$ = $;
+        this._ = _;
+
+        this._setOptions();
+        this._setEl();
+        this.bindUI();
+        this.attachEvents();
+        this.initialize.apply(this, arguments);
+    }
+
+    /**
+     * Set options on this object from the options object passed to th constructor based on the key names
+     * in viewProps.
+     * @private
+     */
+    Behold.prototype._setOptions = function(){
+        var options = this.options,
+            viewProps = [&#x27;el&#x27;, &#x27;id&#x27;, &#x27;tagName&#x27;, &#x27;className&#x27;, &#x27;ui&#x27;, &#x27;events&#x27;],
+            keys;
+
+        if (options)
+        {
+            keys = Object.keys(options);
+            keys.forEach(function(key){
+                if (viewProps.indexOf(key) !== -1) this[key] = options[key];
+            }, this);
+        }
+    };
+
+    /**
+     * If this.el is defined, run it through jQuery and set it as a reference to the element for this view.
+     * Otherwise, create a new element based on the id, attributes, tagName and className properties.
+     * @private
+     */
+    Behold.prototype._setEl = function(){
+        var attrs = {},
+            tagName = this.tagName,
+            $el;
+
+        if (this.el)
+        {
+            this.$el = $(this.el);
+            return;
+        }
+        attrs = _.extend(attrs, this.options.attributes);
+        attrs[&#x27;class&#x27;] = this.className || &#x27;&#x27;;
+        attrs.id = this.id || &#x27;&#x27;;
+        $el = $(&#x27;&lt;&#x27;+tagName+&#x27;&gt;&lt;/&#x27;+tagName+&#x27;&gt;&#x27;).attr(attrs);
+        this.$el = $el;
+        this.el = $el[0];
+    };
+
+    /**
+     * Get the full selector for a given key in the ui.
+     * @param {object} ui
+     * @param {string} key
+     * @return {string}
+     */
+    Behold.prototype.getUISelector = function(ui, key){
+        var el;
+
+        el = ui[key];
+        // If we&#x27;re using our @ui sugar, keep looping through until we&#x27;ve got the full element string
+        while (el.indexOf(&#x27;@ui.&#x27;) === 0)
+        {
+            el = el.split(&#x27; &#x27;);
+            el = ui[el[0].substr(4)]+&#x27; &#x27;+el.slice(1).join(&#x27; &#x27;);
+        }
+
+        return el;
+    };
+
+    /**
+     * Bind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that
+     * previously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.
+     * @returns {Behold}
+     */
+    Behold.prototype.bindUI = function(){
+        var ui = _.extend({}, this._uiBindings || this.ui),
+            keys;
+
+        if (!ui || Object.getOwnPropertyNames(ui).length === 0) return this;
+        if (!this._uiBindings) this._uiBindings = _.extend({}, ui);
+
+        keys = Object.keys(ui);
+        keys.forEach(function(key){
+            var el = this.getUISelector(ui, key);
+            this.ui[key] = this.$el.find(el);
+        }, this);
+        return this;
+    };
+
+    /**
+     * Unbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.
+     * @returns {Behold}
+     */
+    Behold.prototype.unBindUI = function(){
+        var ui = this.ui,
+            keys;
+
+        if (!ui || !this._uiBindings) return this;
+
+        keys = Object.keys(ui);
+        keys.forEach(function(key){
+            delete this.ui[key];
+        }, this);
+
+        this.ui = _.extend({}, this._uiBindings);
+        delete this._uiBindings;
+        return this;
+    };
+
+    /**
+     * Assign events based on this.events(if set) to map either this.ui element references (prefaced by
+     * &quot;@ui.&quot;), or else a bare css locator string. Namespace all events with &#x27;.dgbehold&#x27; plus the cid of this view.
+     * @returns {Behold}
+     */
+    Behold.prototype.attachEvents = function(){
+        var that = this,
+            ui = this.ui,
+            events = this.events,
+            cid = this.cid,
+            keys;
+
+        if (events)
+        {
+            keys = Object.keys(events);
+            keys.forEach(function(key){
+                var func = events[key],
+                    el,
+                    event;
+
+                func = (typeof func === &#x27;function&#x27;) ? func : that[func];
+
+                key = key.split(&#x27; &#x27;);
+                el = (key[1].indexOf(&#x27;@ui.&#x27;) === 0) ? ui[key[1].substr(4)] : $(key[1]);
+                event = key[0]+&#x27;.dgbehold&#x27;+cid;
+
+                el.on(event, func.bind(that));
+            });
+        }
+        return this;
+    };
+
+    /**
+     * Detach events attached by calling attachEvents.
+     * @returns {Behold}
+     */
+    Behold.prototype.detachEvents = function(){
+        var ui = this.ui,
+            events = this.events,
+            cid = this.cid,
+            keys;
+
+        if (events)
+        {
+            keys = Object.keys(events);
+            keys.forEach(function(key){
+                var el;
+
+                key = key.split(&#x27; &#x27;);
+                el = (key[1].indexOf(&#x27;@ui.&#x27;) === 0) ? ui[key[1].substr(4)] : $(key[1]);
+
+                el.off(&#x27;.dgbehold&#x27;+cid);
+            });
+        }
+        return this;
+    };
+
+    /**
+     * Remove the referenced element from the DOM.
+     * @returns {Behold}
+     */
+    Behold.prototype.remove = function(){
+        this.detachEvents();
+        this.$el.remove();
+        return this;
+    };
+
+    /**
+     * Set a new element as the referenced element for this view.
+     * @param {string|HTMLElement|jQuery} element
+     * @param {boolean=} skipEvents
+     * @param {boolean=} skipUnbinding
+     * @returns {Behold}
+     */
+    Behold.prototype.setElement = function(element, skipEvents, skipUnbinding){
+        if (this.$el &amp;&amp; !skipUnbinding)
+        {
+            this.detachEvents();
+            this.unBindUI();
+        }
+
+        this.$el = (element instanceof $) ? element : $(element);
+        this.el = this.$el[0];
+
+        if (!skipEvents)
+        {
+            this.bindUI();
+            this.attachEvents();
+        }
+
+        return this;
+    };
+
+    /**
+     * An empty function by default, to be overridden by extending classes.
+     */
+    Behold.prototype.initialize = function(){};
+
+    /**
+     * Recreate javascript inheritance (working similarly to backbone extend) to allow our views to be
+     * extendable/inheritable.
+     */
+    Behold.extend = function(onProto, onStatic){
+        onProto = onProto || {};
+        onStatic = onStatic || {};
+        var parent = this,
+            child,
+            proxy;
+
+        child = (onProto &amp;&amp; onProto.hasOwnProperty(&#x27;constructor&#x27;)) ?
+            onProto.constructor : function(){ return parent.apply(this, arguments); };
+
+        _.extend(child, parent, onStatic);
+
+        proxy = function(){ this.constructor = child; };
+        proxy.prototype = parent.prototype;
+        child.prototype = new proxy;
+
+        _.extend(child.prototype, onProto);
+        child.__super__ = parent.prototype;
+        return child;
+    };
+
+    /**
+     * Application container for behold views.
+     * @constructor
+     */
+    Behold.Application = function(){
+        this.modules = {};
+    };
+
+    /**
+     * Call the initialize function on all registered modules when start is called.
+     */
+    Behold.Application.prototype.start = function(){
+        var modules = this.modules;
+        for (var name in modules)
+        {
+            if (modules.hasOwnProperty(name) &amp;&amp; modules[name].initialize &amp;&amp;
+                typeof modules[name].initialize === &#x27;function&#x27;)
+            {
+                modules[name].initialize();
+            }
+        }
+    };
+
+    /**
+     * Register a module, instantiating it and passing it the arguments specified.
+     * Alternatively, if the initializer isn&#x27;t provided, expect that we want a reference to the module
+     * passed back to us. Will return undefined if module hasn&#x27;t previously been registered.
+     * @param {string} name
+     * @param {function=} initializer
+     * @param {...} arguments to be passed to the initializer
+     * @returns {*}
+     */
+    Behold.Application.prototype.module = function(name, initializer){
+        if (!initializer) return this.modules[name];
+
+        var module = {},
+            args = [module, this, $, _].concat(Array.prototype.slice.call(arguments, 2));
+
+        initializer.apply(module, args);
+        this.modules[name] = module;
+        return this.modules[name];
+    };
+
+    root.Behold = Behold;
+})(window, jQuery, _);
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

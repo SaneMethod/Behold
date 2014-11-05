@@ -64,6 +64,7 @@ then Behold is for you.
 Dependencies
 ------------
 [jQuery](https://jquery.com), or API-compatible replacement library, such as [Zepto](http://zeptojs.com/).
+
 [Underscore](http://underscorejs.org/) - Optional - if not supplied, Behold includes a stripped down, native-reliant
 re-implementation of some of underscore's functionality. See below for more details.
 

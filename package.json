@@ -1,0 +1,17 @@
+{
+	"name":"Behold",
+    "description":"JS Views for when you want Views, but don't need Backbone's weight, Angular's opinions, or excessive dependencies.",
+	"author":"Christopher Keefer [SaneMethod]",
+    "version":"0.1.0",
+    "homepage":"https://github.com/SaneMethod/Behold",
+	"devDependencies":{
+		"grunt":"0.4.x",
+		"grunt-shell":"1.1.x",
+		"grunt-cli":"0.1.x",
+		"grunt-contrib-uglify":"0.2.x",
+        "grunt-contrib-yuidoc":"0.5.x"
+	},
+	"engines":{
+		"node":">=0.10"
+	}
+}
