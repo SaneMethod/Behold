@@ -15,32 +15,27 @@ module.exports = function(grunt) {
                 options:{
                     sourceMappingURL:'Behold.min.map',
                     sourceMapPrefix:2,
-                    sourceMap:'Behold.min.map'
+                    sourceMap:'dist/Behold.min.map'
                 },
-                src:'Behold.js',
-                dest:'Behold.min.js'
+                src:'src/Behold.js',
+                dest:'dist/Behold.min.js'
             }
         },
-        yuidoc: {
-            compile: {
-                name: '<%= pkg.name %>',
-                description: '<%= pkg.description %>',
-                version: '<%= pkg.version %>',
-                url: '<%= pkg.homepage %>',
-                options: {
-                    paths: './',
-                    outdir: './docs/'
-                }
+        doxx: {
+            all: {
+                src:'src',
+                ignore:'node_modules,docs',
+                target:'docs'
             }
         }
     });
 
     // Load plugins for each task
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-doxx');
 
     // Tasks
-    grunt.registerTask('default', ['uglify', 'yuidoc']);
+    grunt.registerTask('default', ['uglify', 'doxx']);
     grunt.registerTask('justCode', ['uglify']);
-    grunt.registerTask('justDocs', ['yuidoc']);
+    grunt.registerTask('justDocs', ['doxx']);
 };
