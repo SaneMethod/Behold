@@ -1,10 +1,13 @@
 Behold
 ======
-######JS Views
+######JS Views for when you want Views, but don't need Backbone's weight, Angular's opinions, or excessive dependencies.
 
 Behold is for those who like the tidy encapsulation that frameworks like [Chaplin](https://github.com/chaplinjs/chaplin)
 and [Marionette](http://marionettejs.com/) provide for js views, but you don't need everything that Backbone offers,
 and can't justify the extra weight of it.
+
+Contents
+--------
 
 [Why Views](#why-views)
 
