@@ -449,6 +449,8 @@
     if (!ui || Object.getOwnPropertyNames(ui).length === 0) return this;
     if (!this._uiBindings) this._uiBindings = _.extend({}, ui);
 
+    this.ui = {};
+
     keys = Object.keys(ui);
     keys.forEach(function(key){
         var el = this.getUISelector(ui, key);
@@ -677,7 +679,7 @@
             <h1>module</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.Application.prototype.module()</span> -><span>*</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.Application.prototype.module()</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -692,29 +694,28 @@
               <tr>
                 <td>name</td>
                 <td>string</td>
-                <td>Name of the module.</td>
+                <td></td>
               </tr>
               <tr>
                 <td>initializer</td>
                 <td>function=</td>
-                <td>An constructor function.</td>
+                <td></td>
               </tr>
               <tr>
                 <td>arguments</td>
                 <td>...</td>
-                <td>Additional arguments to be passed to the initializer</td>
+                <td>to be passed to the initializer</td>
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Register a module, instantiating it and passing it the arguments specified.<br />Alternatively, if the initializer isn&#39;t provided, expect that we want a reference to the module<br />passed back to us. Will return undefined if module hasn&#39;t previously been registered.</p> </div>
+          <div class="description"><p>Register a module, instantiating it and passing it the arguments specified.<br />Alternatively, if the initializer isn&#39;t provided, expect that we want a reference to the module<br />passed back to us. Will always return an object. Module declaration can be split amongst<br />multiple files.</p> </div>
           <pre><code class="language-javascript">Behold.Application.prototype.module = function(name, initializer){
-    if (!initializer) return this.modules[name];
-
-    var module = {},
+    var module = this.modules[name] = this.modules[name] || {},
         args = [module, this, $, _].concat(Array.prototype.slice.call(arguments, 2));
 
+    if (!initializer) return this.modules[name];
+
     initializer.apply(module, args);
-    this.modules[name] = module;
     return this.modules[name];
 };
 
