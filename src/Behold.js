@@ -215,6 +215,8 @@
         if (!ui || Object.getOwnPropertyNames(ui).length === 0) return this;
         if (!this._uiBindings) this._uiBindings = _.extend({}, ui);
 
+        this.ui = {};
+
         keys = Object.keys(ui);
         keys.forEach(function(key){
             var el = this.getUISelector(ui, key);
@@ -393,20 +395,20 @@
     /**
      * Register a module, instantiating it and passing it the arguments specified.
      * Alternatively, if the initializer isn't provided, expect that we want a reference to the module
-     * passed back to us. Will return undefined if module hasn't previously been registered.
-     * @param {string} name Name of the module.
-     * @param {function=} initializer An constructor function.
-     * @param {...} arguments Additional arguments to be passed to the initializer
-     * @return {*}
+     * passed back to us. Will always return an object. Module declaration can be split amongst
+     * multiple files.
+     * @param {string} name
+     * @param {function=} initializer
+     * @param {...} arguments to be passed to the initializer
+     * @returns {object}
      */
     Behold.Application.prototype.module = function(name, initializer){
-        if (!initializer) return this.modules[name];
-
-        var module = {},
+        var module = this.modules[name] = this.modules[name] || {},
             args = [module, this, $, _].concat(Array.prototype.slice.call(arguments, 2));
 
+        if (!initializer) return this.modules[name];
+
         initializer.apply(module, args);
-        this.modules[name] = module;
         return this.modules[name];
     };
 
