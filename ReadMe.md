@@ -139,5 +139,7 @@ gApp.module('moduleName', function(self, app, $, _){
 
 More Details
 ------------
+View, download and/or Fork the code [on GitHub](https://github.com/SaneMethod/Behold).
+
 For a detailed view into the internals of Behold,
 [head to the doxx pages](http://sanemethod.github.io/Behold/Behold.js.html).
