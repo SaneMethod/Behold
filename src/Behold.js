@@ -1,7 +1,7 @@
 /**
  * Copyright Christopher Keefer, 2014.
  * @author Christopher Keefer [SaneMethod]
- * @version 0.1.0
+ * @version 0.1.1
  *
  * Recreate js Views in a manner portable to projects that aren't using libraries with the concept built-in.
  * @param {object} root Where to attach the Behold object.
@@ -204,12 +204,15 @@
     };
 
     /**
-     * Bind this.ui (if set) as a mapping to the jQuery element references, to replace the css locator string that
-     * previously occupied it. Save a reference in case we need to unbund or rebind in _uiBindings.
-     * @return {Behold}
+     * Bind this.ui (if set) as a lazy-mapping to the jQuery element references, to replace the css locator string that
+     * previously occupied it. Cache retrieved jQuery element references to return after the first time the ui key has
+     * been referenced. Save the original css strings in case we need to unbind or rebind in _uiBindings.
+     * @returns {Behold}
      */
     Behold.prototype.bindUI = function(){
         var ui = _.extend({}, this._uiBindings || this.ui),
+            uiCache = (this._uiCache = {}),
+            $el = this.$el,
             keys;
 
         if (!ui || Object.getOwnPropertyNames(ui).length === 0) return this;
@@ -220,7 +223,15 @@
         keys = Object.keys(ui);
         keys.forEach(function(key){
             var el = this.getUISelector(ui, key);
-            this.ui[key] = this.$el.find(el);
+
+            Object.defineProperty(this.ui, key, {
+                get:function(){
+                    if (uiCache[key]){
+                        return uiCache[key];
+                    }
+                    return (uiCache[key] = $el.find(el));
+                }
+            });
         }, this);
         return this;
     };
@@ -248,13 +259,15 @@
     /**
      * Assign events based on this.events(if set) to map either this.ui element references (prefaced by
      * "@ui."), or else a bare css locator string. Namespace all events with '.dgbehold' plus the cid of this view.
-     * @return {Behold}
+     * Delegate events to the root element for efficiency.
+     * @returns {Behold}
      */
     Behold.prototype.attachEvents = function(){
         var that = this,
-            ui = this.ui,
+            ui = this._uiBindings || this.ui,
             events = this.events,
             cid = this.cid,
+            $el = this.$el,
             keys;
 
         if (events)
@@ -268,10 +281,10 @@
                 func = (typeof func === 'function') ? func : that[func];
 
                 key = key.split(' ');
-                el = (key[1].indexOf('@ui.') === 0) ? ui[key[1].substr(4)] : $(key[1]);
+                el = (key[1].indexOf('@ui.') === 0) ? that.getUISelector(ui, key[1].substr(4)) : key[1];
                 event = key[0]+'.dgbehold'+cid;
 
-                el.on(event, func.bind(that));
+                $el.on(event, el, func.bind(that));
             });
         }
         return this;
@@ -279,25 +292,15 @@
 
     /**
      * Detach events attached by calling attachEvents.
-     * @return {Behold}
+     * @returns {Behold}
      */
     Behold.prototype.detachEvents = function(){
-        var ui = this.ui,
-            events = this.events,
-            cid = this.cid,
-            keys;
+        var events = this.events,
+            cid = this.cid;
 
         if (events)
         {
-            keys = Object.keys(events);
-            keys.forEach(function(key){
-                var el;
-
-                key = key.split(' ');
-                el = (key[1].indexOf('@ui.') === 0) ? ui[key[1].substr(4)] : $(key[1]);
-
-                el.off('.dgbehold'+cid);
-            });
+            this.$el.off('.dgbehold'+cid);
         }
         return this;
     };
