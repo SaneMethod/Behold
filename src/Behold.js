@@ -1,7 +1,7 @@
 /**
  * Copyright Christopher Keefer, 2014.
  * @author Christopher Keefer [SaneMethod]
- * @version 0.1.1
+ * @version 0.1.2
  *
  * Recreate js Views in a manner portable to projects that aren't using libraries with the concept built-in.
  * @param {object} root Where to attach the Behold object.
@@ -259,7 +259,10 @@
     /**
      * Assign events based on this.events(if set) to map either this.ui element references (prefaced by
      * "@ui."), or else a bare css locator string. Namespace all events with '.dgbehold' plus the cid of this view.
-     * Delegate events to the root element for efficiency.
+     * Delegate events to the root element for efficiency. If the event key is prefaced with the 'capture'
+     * indicator, the > symbol, bind to the specified element using event capturing, allowing us to 'delegate' to
+     * the root element for events that don't bubble.
+     * Capturing example: events: { '>invalid @ui.form': 'handleInvalid' }
      * @returns {Behold}
      */
     Behold.prototype.attachEvents = function(){
@@ -268,6 +271,7 @@
             events = this.events,
             cid = this.cid,
             $el = this.$el,
+            captures = this._capturingListeners = this._capturingListeners || {},
             keys;
 
         if (events)
@@ -275,14 +279,21 @@
             keys = Object.keys(events);
             keys.forEach(function(key){
                 var func = events[key],
+                    sKey = key.split(' '),
                     el,
                     event;
 
                 func = (typeof func === 'function') ? func : that[func];
 
-                key = key.split(' ');
-                el = (key[1].indexOf('@ui.') === 0) ? that.getUISelector(ui, key[1].substr(4)) : key[1];
-                event = key[0]+'.dgbehold'+cid;
+                el = (sKey[1].indexOf('@ui.') === 0) ? that.getUISelector(ui, sKey[1].substr(4)) : sKey[1];
+                event = sKey[0]+'.dgbehold'+cid;
+
+                if (event[0] === '>'){
+                    event = sKey[0].substr(1);
+                    captures[key] = func.bind(that);
+                    $el[0].addEventListener(event, captures[key], true);
+                    return;
+                }
 
                 $el.on(event, el, func.bind(that));
             });
@@ -295,12 +306,28 @@
      * @returns {Behold}
      */
     Behold.prototype.detachEvents = function(){
-        var events = this.events,
-            cid = this.cid;
+        var that = this,
+            $el = this.$el,
+            events = this.events,
+            cid = this.cid,
+            keys = Object.keys(events);
 
-        if (events)
+        if (keys.length)
         {
-            this.$el.off('.dgbehold'+cid);
+            // Remove all delegated events
+            $el.off('.dgbehold'+cid);
+
+            // Remove all capturing events
+            keys.filter(function(key){
+                return key[0] === '>';
+            }).forEach(function(key){
+                var func = that._capturingListeners[key],
+                    event;
+
+                event = key.split(' ')[0].substr(1);
+                $el[0].removeEventListener(event, func, true);
+            });
+            this._capturingListeners = {};
         }
         return this;
     };
