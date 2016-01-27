@@ -1,7 +1,7 @@
 /**
  * Copyright Christopher Keefer, 2014.
  * @author Christopher Keefer [SaneMethod]
- * @version 0.1.2
+ * @version 0.1.1
  *
  * Recreate js Views in a manner portable to projects that aren't using libraries with the concept built-in.
  * @param {object} root Where to attach the Behold object.
@@ -176,8 +176,8 @@
             return;
         }
         attrs = _.extend(attrs, this.options.attributes);
-        attrs['class'] = this.className || '';
-        attrs.id = this.id || '';
+        attrs['class'] = this.className || void 0;
+        attrs.id = this.id || void 0;
         $el = $('<'+tagName+'></'+tagName+'>').attr(attrs);
         this.$el = $el;
         this.el = $el[0];
@@ -262,7 +262,6 @@
      * Delegate events to the root element for efficiency. If the event key is prefaced with the 'capture'
      * indicator, the > symbol, bind to the specified element using event capturing, allowing us to 'delegate' to
      * the root element for events that don't bubble.
-     * Capturing example: events: { '>invalid @ui.form': 'handleInvalid' }
      * @returns {Behold}
      */
     Behold.prototype.attachEvents = function(){
