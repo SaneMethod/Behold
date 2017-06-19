@@ -73,22 +73,19 @@
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li><a href="index.html">Main</a></li>
             <li class="active"><a href="Behold.js.html">Behold.js</a></li>
+            <li><a href="Behold.Model.js.html">Behold.Model.js</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#isObject"><i class="alert alert-info"></i><span>isObject</span></a>
+              <li><a href="#Behold"><i class="alert alert-success"></i><span>Behold</span></a>
               </li>
               <li><a href="#extend"><i class="alert alert-info"></i><span>extend</span></a>
               </li>
-              <li><a href="#uniqueId"><i class="alert alert-info"></i><span>uniqueId</span></a>
+              <li><a href="#View"><i class="alert alert-success"></i><span>View</span></a>
               </li>
-              <li><a href="#escape"><i class="alert alert-info"></i><span>escape</span></a>
+              <li><a href="#attachElContent"><i class="alert alert-info"></i><span>attachElContent</span></a>
               </li>
-              <li><a href="#templateSettings"><i class="alert alert-success"></i><span>templateSettings</span></a>
-              </li>
-              <li><a href="#template"><i class="alert alert-info"></i><span>template</span></a>
-              </li>
-              <li><a href="#Behold"><i class="alert alert-success"></i><span>Behold</span></a>
+              <li><a href="#render"><i class="alert alert-info"></i><span>render</span></a>
               </li>
               <li><a href="#getUISelector"><i class="alert alert-info"></i><span>getUISelector</span></a>
               </li>
@@ -106,7 +103,11 @@
               </li>
               <li><a href="#initialize"><i class="alert alert-info"></i><span>initialize</span></a>
               </li>
-              <li><a href="#extend"><i class="alert alert-info"></i><span>extend</span></a>
+              <li><a href="#extend"><i class="alert alert-success"></i><span>extend</span></a>
+              </li>
+              <li><a href="#Router"><i class="alert alert-success"></i><span>Router</span></a>
+              </li>
+              <li><a href="#navigate"><i class="alert alert-info"></i><span>navigate</span></a>
               </li>
               <li><a href="#Application"><i class="alert alert-success"></i><span>Application</span></a>
               </li>
@@ -139,228 +140,57 @@
               </tr>
               <tr>
                 <td>_</td>
-                <td>object=</td>
-                <td>underscore lib.</td>
+                <td>object</td>
+                <td>underscore/lodash lib.</td>
               </tr>
             </tbody>
           </table>
           <div class="description"><p>Copyright Christopher Keefer, 2014.</p> </div>
           <pre><code class="language-javascript">(function(root, $, _){</code></pre>
-          <div class="description"><p>If the underscore library isn&#39;t passed to us, we&#39;ll patch in our own native-reliant functions for the<br />underscore functionality we want/need.</p> </div>
-          <pre><code class="language-javascript">_ = _ || (function(){
-    var idCounter = 0,
-        noMatch = /(.)^/,
-        escapes = {
-            &quot;'&quot;:&quot;&amp;#39;&quot;,
-            '&amp;':'&amp;amp;',
-            '&lt;':'&amp;lt;',
-            '&gt;':'&amp;gt;',
-            '&quot;':'&amp;quot;',
-            '\\':'\\',
-            '/':'&amp;#x2F',
-            '\r':'r',
-            '\n':'&lt;br /&gt;',
-            '\u2028':'u2028',
-            '\u2029':'u2029'
-        },
-        escaper = new RegExp(Object.keys(escapes).join('|')+'/g'),
-        escapeChar = function(match) {
-            return '\\' + escapes[match];
-        },
-        _fill = {</code></pre>
-          <section id="isObject">
-            <h1>isObject</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>isObject()</span> -><span>boolean</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>obj</td>
-                <td>*</td>
-                <td>The parameter to test for 'objectness'.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Test to see whether the passed object should indeed be considered an object,<br />particularly for the purposes of extend.</p> </div>
-          <pre><code class="language-javascript">isObject: function (obj) {
-    var types = ['function', 'object'];
-
-    return (types.indexOf(typeof obj) !== -1 &amp;&amp; !!obj);
-},</code></pre>
-          <section id="extend">
-            <h1>extend</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>extend()</span> -><span>object</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>obj</td>
-                <td>object</td>
-                <td>Destination object.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Copy all properties on an unspecified number of source objects into the destination object,<br />with properties appearing on later source objects overriding identically named properties in<br />the destination or earlier source objects.</p> </div>
-          <pre><code class="language-javascript">extend: function (obj) {
-    var src,
-        keys;
-
-    if (!this.isObject(obj)) return obj;
-    for (var i = 1, len = arguments.length; i &lt; len; i++) {
-        src = arguments[i];
-        if (!this.isObject(src)) continue;
-        keys = Object.keys(src);
-        keys.forEach(function (prop) {
-            obj[prop] = src[prop];
-        });
-    }
-    return obj;
-},</code></pre>
-          <section id="uniqueId">
-            <h1>uniqueId</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>uniqueId()</span> -><span>string</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>prefix</td>
-                <td>string,number=</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Return a uniqueId using an internal counter and, if passed, a prefix string.</p> </div>
-          <pre><code class="language-javascript">uniqueId: function (prefix) {
-    return (prefix) ? prefix + (++idCounter+'') : (++idCounter+'');
-},</code></pre>
-          <section id="escape">
-            <h1>escape</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>escape()</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>String</td>
-                <td>str</td>
-                <td>to replace characters in.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Escape html special characters in a string.</p> </div>
-          <pre><code class="language-javascript">escape:function(str){
-    return str.replace(escaper, function(match){
-        return escapes[match];
-    });
-},</code></pre>
-          <section id="templateSettings">
-            <h1>templateSettings</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type">property</div><span>templateSettings</span>
-            </p>
-          </section>
-          <div class="description"><p>Based on the same defaults as standard underscore.</p> </div>
-          <pre><code class="language-javascript">templateSettings:{
-    interpolate : /&lt;%=([\s\S]+?)%&gt;/g,
-    escape      : /&lt;%-([\s\S]+?)%&gt;/g
-},</code></pre>
-          <section id="template">
-            <h1>template</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>template()</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>text</td>
-                <td>string</td>
-                <td>The text to use as the template.</td>
-              </tr>
-              <tr>
-                <td>settings</td>
-                <td>object=</td>
-                <td>Options to override the standard templateSettings.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Not a full-featured replacement for underscore templates - this only allows us to escape<br />or interpolate named values into the template string - no evaluation.</p> </div>
-          <pre><code class="language-javascript">template:function(text, settings){
-    settings = this.extend({}, this.templateSettings, settings);
-    var matcher = RegExp([
-        (settings.escape || noMatch).source,
-        (settings.interpolate || noMatch).source
-    ].join('|'), 'g'),
-        replacer = function(data, match, escape, interpolate, offset){
-            if (escape) return _fill.escape(escape.trim());
-            if (interpolate) return data[interpolate.trim()];
-        },
-        template;
-
-    template = function(data){
-        text = text.replace(matcher, replacer.bind(this, data));
-        return text;
-    };
-
-    return template;
-}
-            };
-
-        return _fill;
-    })();</code></pre>
           <section id="Behold">
             <h1>Behold</h1>
             <h5 class="subheader"></h5>
             <p>
               <div class="label label-success radius ctx-type">constructor</div><span>Behold()</span>
+            </p>
+          </section>
+          <div class="description"><p>Our container function for the various elements of Behold, and static functions such as extend.</p> </div>
+          <pre><code class="language-javascript">function Behold(){}</code></pre>
+          <section id="extend">
+            <h1>extend</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.extend()</span>
+            </p>
+          </section>
+          <div class="description"><p>Recreate javascript inheritance (working similarly to backbone extend) to allow our views to be<br />extendable/inheritable.</p> </div>
+          <pre><code class="language-javascript">Behold.extend = function(onProto, onStatic){
+    onProto = onProto || {};
+    onStatic = onStatic || {};
+    var parent = this,
+        child,
+        proxy;</code></pre>
+          <div class="description"><p>For legacy support reasons, if the context (this) is Behold, then we instead recall extend<br />with the context set to Behold.View, allowing applications to continue using Behold.extend when<br />they want to extend Behold Views.</p> </div>
+          <pre><code class="language-javascript">if (this === Behold) return Behold.extend.apply(Behold.View, arguments);
+
+child = (onProto &amp;&amp; onProto.hasOwnProperty('constructor')) ?
+    onProto.constructor : function(){ return parent.apply(this, arguments); };
+
+_.extend(child, parent, onStatic);
+
+proxy = function(){ this.constructor = child; };
+proxy.prototype = parent.prototype;
+child.prototype = new proxy;
+
+_.extend(child.prototype, onProto);
+child.__super__ = parent.prototype;
+return child;
+    };</code></pre>
+          <section id="View">
+            <h1>View</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">constructor</div><span>Behold.View()</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -380,7 +210,7 @@
             </tbody>
           </table>
           <div class="description"><p>Our view function.</p> </div>
-          <pre><code class="language-javascript">function Behold(options){
+          <pre><code class="language-javascript">Behold.View = function(options){
     this.cid = _.uniqueId('view');
     this.options = options || {};
     this.$ = $;
@@ -391,12 +221,44 @@
     this.bindUI();
     this.attachEvents();
     this.initialize.apply(this, arguments);
-}</code></pre>
+};</code></pre>
+          <section id="attachElContent">
+            <h1>attachElContent</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.attachElContent()</span>
+            </p>
+          </section>
+          <div class="description"><p>Called if we&#39;re generating a new DOM structure rather than attaching to an existing structure.<br />Override this to change the way we attach our generated DOM - by default, we render the template<br />(if any) and make that the content of this element, and then attach this.el to the specified region.</p> </div>
+          <pre><code class="language-javascript">Behold.View.prototype.attachElContent = function(){
+    var content = this.render();
+    this.$el.append(content);
+    this.region.empty().append(this.$el);
+};</code></pre>
+          <section id="render">
+            <h1>render</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.render()</span>
+            </p>
+          </section>
+          <div class="description"><p>Renders the content for this view when we&#39;re not attaching to an existing DOM.<br />By default, we rely on a template being defined for the view, and use<br />underscores template function to render it, passing this.options in. If<br />no template is defined, we return an empty string.</p> </div>
+          <pre><code class="language-javascript">Behold.View.prototype.render = function(){
+    var template = (this.template) ?
+        (typeof this.template === 'function') ? this.template :
+            _.template($(this.template).html()) : void 0;
+
+    if (template){
+        return template(this.options);
+    }
+
+    return '';
+};</code></pre>
           <section id="getUISelector">
             <h1>getUISelector</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.getUISelector()</span> -><span>string</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.getUISelector()</span> -><span>string</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -421,7 +283,7 @@
             </tbody>
           </table>
           <div class="description"><p>Get the full selector for a given key in the ui.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.getUISelector = function(ui, key){
+          <pre><code class="language-javascript">Behold.View.prototype.getUISelector = function(ui, key){
     var el;
 
     el = ui[key];
@@ -438,11 +300,11 @@
             <h1>bindUI</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.bindUI()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.bindUI()</span>
             </p>
           </section>
           <div class="description"><p>Bind this.ui (if set) as a lazy-mapping to the jQuery element references, to replace the css locator string that<br />previously occupied it. Cache retrieved jQuery element references to return after the first time the ui key has<br />been referenced. Save the original css strings in case we need to unbind or rebind in _uiBindings.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.bindUI = function(){
+          <pre><code class="language-javascript">Behold.View.prototype.bindUI = function(){
     var ui = _.extend({}, this._uiBindings || this.ui),
         uiCache = (this._uiCache = {}),
         $el = this.$el,
@@ -472,11 +334,11 @@
             <h1>unBindUI</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.unBindUI()</span> -><span>Behold</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.unBindUI()</span> -><span>Behold.View</span>
             </p>
           </section>
           <div class="description"><p>Unbind all ui element references by deleting the entries and restoring this.ui to the contents of _uiBindings.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.unBindUI = function(){
+          <pre><code class="language-javascript">Behold.View.prototype.unBindUI = function(){
     var ui = this.ui,
         keys;
 
@@ -495,11 +357,11 @@
             <h1>attachEvents</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.attachEvents()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.attachEvents()</span>
             </p>
           </section>
-          <div class="description"><p>Assign events based on this.events(if set) to map either this.ui element references (prefaced by<br />&quot;@ui.&quot;), or else a bare css locator string. Namespace all events with &#39;.dgbehold&#39; plus the cid of this view.<br />Delegate events to the root element for efficiency. If the event key is prefaced with the &#39;capture&#39;<br />indicator, the &gt; symbol, bind to the specified element using event capturing, allowing us to &#39;delegate&#39; to<br />the root element for events that don&#39;t bubble.<br />Capturing example: events: { &#39;&gt;invalid @ui.form&#39;: &#39;handleInvalid&#39; }</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.attachEvents = function(){
+          <div class="description"><p>Assign events based on this.events(if set) to map either this.ui element references (prefaced by<br />&quot;@ui.&quot;), or else a bare css locator string. Namespace all events with &#39;.dgbehold&#39; plus the cid of this view.<br />Delegate events to the root element for efficiency. If the event key is prefaced with the &#39;capture&#39;<br />indicator, the &gt; symbol, bind to the specified element using event capturing, allowing us to &#39;delegate&#39; to<br />the root element for events that don&#39;t bubble.</p> </div>
+          <pre><code class="language-javascript">Behold.View.prototype.attachEvents = function(){
     var that = this,
         ui = this._uiBindings || this.ui,
         events = this.events,
@@ -538,11 +400,11 @@
             <h1>detachEvents</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.detachEvents()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.detachEvents()</span>
             </p>
           </section>
           <div class="description"><p>Detach events attached by calling attachEvents.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.detachEvents = function(){
+          <pre><code class="language-javascript">Behold.View.prototype.detachEvents = function(){
     var that = this,
         $el = this.$el,
         events = this.events,
@@ -572,11 +434,11 @@
             <h1>remove</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.remove()</span> -><span>Behold</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.remove()</span> -><span>Behold.View</span>
             </p>
           </section>
           <div class="description"><p>Remove the referenced element from the DOM.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.remove = function(){
+          <pre><code class="language-javascript">Behold.View.prototype.remove = function(){
     this.detachEvents();
     this.$el.remove();
     return this;
@@ -585,7 +447,7 @@
             <h1>setElement</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.setElement()</span> -><span>Behold</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.setElement()</span> -><span>Behold.View</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -615,7 +477,7 @@
             </tbody>
           </table>
           <div class="description"><p>Set a new element as the referenced element for this view.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.setElement = function(element, skipEvents, skipUnbinding){
+          <pre><code class="language-javascript">Behold.View.prototype.setElement = function(element, skipEvents, skipUnbinding){
     if (this.$el &amp;&amp; !skipUnbinding)
     {
         this.detachEvents();
@@ -637,38 +499,83 @@
             <h1>initialize</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.prototype.initialize()</span>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.View.prototype.initialize()</span>
             </p>
           </section>
           <div class="description"><p>An empty function by default, to be overridden by extending classes.</p> </div>
-          <pre><code class="language-javascript">Behold.prototype.initialize = function(){};</code></pre>
+          <pre><code class="language-javascript">Behold.View.prototype.initialize = function(){};</code></pre>
           <section id="extend">
             <h1>extend</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>Behold.extend()</span>
+              <div class="label label-success radius ctx-type">property</div><span>Behold.View.extend</span>
             </p>
           </section>
-          <div class="description"><p>Recreate javascript inheritance (working similarly to backbone extend) to allow our views to be<br />extendable/inheritable.</p> </div>
-          <pre><code class="language-javascript">Behold.extend = function(onProto, onStatic){
-    onProto = onProto || {};
-    onStatic = onStatic || {};
-    var parent = this,
-        child,
-        proxy;
+          <div class="description"><p>Make Behold.View extensible.</p> </div>
+          <pre><code class="language-javascript">Behold.View.extend = Behold.extend.bind(Behold.View);</code></pre>
+          <section id="Router">
+            <h1>Router</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">constructor</div><span>Behold.Router()</span>
+            </p>
+          </section>
+          <div class="description"><p>Create a router to attach to a module that has a <code>routes</code> object defined on it.<br />By default we use the module itself as the controller, but the module can also<br />define a <code>controller</code> object that can contain the handler functions.</p> </div>
+          <pre><code class="language-javascript">Behold.Router = function(routes, module){
+    this.controller = module.controller || module;
+    this.routes = routes;
+    this.handlers = this._parseRoutes();
 
-    child = (onProto &amp;&amp; onProto.hasOwnProperty('constructor')) ?
-        onProto.constructor : function(){ return parent.apply(this, arguments); };
+    window.addEventListener('popstate', function(event){
+        this._onChange(window.location.pathname, event.state || {});
+    }.bind(this));
+};
 
-    _.extend(child, parent, onStatic);
+// Cached Regexes for Routing
+Behold.Router.optionalParam = /\((.*?)\)/g;
+Behold.Router.namedParam    = /(\(\?)?:\w+/g;
+Behold.Router.splatParam    = /\*\w+/g;
+Behold.Router.escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;</code></pre>
+          <section id="navigate">
+            <h1>navigate</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Behold.Router.navigate()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>url</td>
+                <td>string</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>data</td>
+                <td>object=</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Navigate to the specified url, optionally passing the data object to the popstate event<br />both on navigation, and if we were to press the &#39;back&#39; button to navigate away.</p> </div>
+          <pre><code class="language-javascript">Behold.Router.navigate = function(url, data){
+    var event = new Event('popstate');
 
-    proxy = function(){ this.constructor = child; };
-    proxy.prototype = parent.prototype;
-    child.prototype = new proxy;
+    data = data || {};
 
-    _.extend(child.prototype, onProto);
-    child.__super__ = parent.prototype;
-    return child;
+    window.history.pushState(data, document.title, url);
+
+    event.state = data;
+    window.dispatchEvent(event);
+
+    return this;
 };</code></pre>
           <section id="Application">
             <h1>Application</h1>
@@ -690,15 +597,38 @@
           </section>
           <div class="description"><p>Call the initialize function on all registered modules when start is called.</p> </div>
           <pre><code class="language-javascript">Behold.Application.prototype.start = function(){
-    var modules = this.modules;
+    var modules = this.modules,
+        setupRoutes = [],
+        callInit = [],
+        module;
+
+    // Iterate through all routes and router setup, before iterating through again to
+    // call init, so that routers are ready to handle possible navigation called from
+    // initialize functions.
     for (var name in modules)
     {
-        if (modules.hasOwnProperty(name) &amp;&amp; modules[name].initialize &amp;&amp;
-            typeof modules[name].initialize === 'function')
-        {
-            modules[name].initialize();
+        if (modules.hasOwnProperty(name)){
+            module = modules[name];
+
+            if (module.routes)
+            {
+                setupRoutes.push(module);
+            }
+
+            if (module.initialize &amp;&amp; typeof module.initialize === 'function')
+            {
+                callInit.push(module);
+            }
         }
     }
+
+    setupRoutes.forEach(function(module){
+        module._router = new Behold.Router(module.routes, module);
+    });
+
+    callInit.forEach(function(module){
+        module.initialize();
+    });
 };</code></pre>
           <section id="module">
             <h1>module</h1>
