@@ -442,7 +442,7 @@
 
     /**
      * When the location has changed, determine if the location matches any
-     * of the route regexes, extract any paramters specified from the location,
+     * of the route regexes, extract any parameters specified from the location,
      * and call the location handler.
      * @param {string} url
      * @param {object=} state
